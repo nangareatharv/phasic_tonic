@@ -1,0 +1,17 @@
+
+[dev]
+black
+isort
+pytest
+flake8
+pytest-cov
+pydocstyle
+
+[docs]
+mkdocs
+mkdocstrings[python]
+mkdocs_section_index
+mkdocs_gen_files
+mkdocs_literate_nav
+mkdocs-gallery
+pillow

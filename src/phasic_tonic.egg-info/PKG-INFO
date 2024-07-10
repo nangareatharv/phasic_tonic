@@ -1,0 +1,39 @@
+Metadata-Version: 2.1
+Name: phasic_tonic
+Version: 0.2.1.dev24
+Summary: Package for phasic/tonic REM analysis
+Author-email: Tuguldur Gerelmaa <author@example.com>
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Provides-Extra: docs
+Requires-Dist: mkdocs; extra == "docs"
+Requires-Dist: mkdocstrings[python]; extra == "docs"
+Requires-Dist: mkdocs_section_index; extra == "docs"
+Requires-Dist: mkdocs_gen_files; extra == "docs"
+Requires-Dist: mkdocs_literate_nav; extra == "docs"
+Requires-Dist: mkdocs-gallery; extra == "docs"
+Requires-Dist: pillow; extra == "docs"
+Provides-Extra: dev
+Requires-Dist: black; extra == "dev"
+Requires-Dist: isort; extra == "dev"
+Requires-Dist: pytest; extra == "dev"
+Requires-Dist: flake8; extra == "dev"
+Requires-Dist: pytest-cov; extra == "dev"
+Requires-Dist: pydocstyle; extra == "dev"
+
+# Phasic-Tonic
+
+To do:
+- [ ] workflow, branching, PRs, code ownership
+- [ ] layout / structure
+- [ ] packaging (setuptools, pyproject, poetry)
+- [ ] documentation / readthedocs
+- [ ] docstrings
+- [ ] linters, style guide
+- [ ] tests
+- [ ] continuous integration / github actions
+- [ ] coverage

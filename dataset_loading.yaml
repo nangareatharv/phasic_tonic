@@ -1,0 +1,16 @@
+patterns:
+  CBD:
+    posttrial: "[\\w-]+posttrial[\\w-]+"
+    hpc: "*HPC*continuous*"
+    pfc: "*PFC*"
+    states: "*-states*"
+  RGS:
+    posttrial: "[\\w-]+post[\\w-]+trial[\\w-]+"
+    hpc: "*HPC*continuous*"
+    pfc: "*PFC*"
+    states: "*-states*"
+  OS:
+    posttrial: ".*post_trial.*"
+    hpc: "*HPC*"
+    pfc: "*PFC*"
+    states: "*states*"
