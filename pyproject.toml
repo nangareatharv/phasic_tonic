@@ -1,25 +1,33 @@
-# Define the build system requirements for the project.
 [build-system]
 requires = ["setuptools", "setuptools-scm[toml]"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "phasic_tonic"
-# we use this instead of setting version, so that setuptools_scm can dynamically
-# set the version number. see notes for details
 dynamic = ["version"]
+requires-python = ">=3.12"
 authors = [
-  { name="Tuguldur Gerelmaa", email="author@example.com" },
+  { name="Tuguldur Gerelmaa", email="animus030@gmail.com" },
 ]
 description = "Package for phasic/tonic REM analysis"
 readme = "README.md"
-requires-python = ">=3.10"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
-# Optional dependencies for documentation [docs] and testing/linting [dev]:
+dependencies = [
+    "matplotlib >= 3.8.4",
+    "mne >= 1.7.1",
+    "neurodsp >= 2.2.1",
+    "numpy >= 1.26.4",
+    "pandas >= 2.2.2",
+    "pynapple >= 0.6.6",
+    "scipy >= 1.14.0",
+    "tqdm >= 4.66.4",
+    "yasa >= 0.6.5",
+]
+
 [project.optional-dependencies]
 docs = [
     'mkdocs',
@@ -46,11 +54,6 @@ local_scheme = 'no-local-version'
 
 [tool.black]
 exclude = '/version\.py$'
-
-[tool.pytest.ini_options]
-# addopts: Additional command-line options for pytest.
-addopts = "--cov=ccn_template"
-testpaths = ["tests"]
 
 [tool.coverage.report]
 exclude_lines = [

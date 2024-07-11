@@ -22,7 +22,7 @@ class DatasetLoader:
         self.dataset_args = dataset_args
         self.combined_mapped = {}
 
-        # name_func(HPC_filename) -> RAT#_SD#_CONDITION_TREATMENT_POSTTRIAL#
+        # name_func(HPC_filename) ->    
         cbd_wrapper = decorate_cbd(cbd_name_func=create_name_cbd, CBD_DIR=dataset_args['CBD']['dir'])
         self.naming_functions = {"CBD": cbd_wrapper, "RGS": create_name_rgs, "OS": create_name_os}
 
