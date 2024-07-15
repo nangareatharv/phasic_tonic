@@ -1,16 +1,18 @@
-patterns:
-  CBD:
-    posttrial: "[\\w-]+posttrial[\\w-]+"
-    hpc: "*HPC*continuous*"
-    pfc: "*PFC*"
-    states: "*-states*"
-  RGS:
-    posttrial: "[\\w-]+post[\\w-]+trial[\\w-]+"
-    hpc: "*HPC*continuous*"
-    pfc: "*PFC*"
-    states: "*-states*"
-  OS:
-    posttrial: ".*post_trial.*"
-    hpc: "*HPC*"
-    pfc: "*PFC*"
-    states: "*states*"
+CBD:
+  path: "/home/nero/datasets/CBD/"
+  posttrial: "[\\w-]+posttrial[\\w-]+"
+  hpc: "*HPC*continuous*"
+  pfc: "*PFC*"
+  states: "*-states*"
+RGS:
+  path: "/home/nero/datasets/RGS14/"
+  posttrial: "[\\w-]+post[\\w-]+trial[\\w-]+"
+  hpc: "*HPC*continuous*"
+  pfc: "*PFC*"
+  states: "*-states*"
+OS:
+  path: "/home/nero/datasets/OSbasic/"
+  posttrial: ".*post_trial.*"
+  hpc: "*HPC*"
+  pfc: "*PFC*"
+  states: "*states*"

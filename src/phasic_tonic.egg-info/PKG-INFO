@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: phasic_tonic
-Version: 0.0.1.dev2
+Version: 0.0.1.dev3
 Summary: Package for phasic/tonic REM analysis
 Author-email: Tuguldur Gerelmaa <animus030@gmail.com>
 Classifier: Programming Language :: Python :: 3

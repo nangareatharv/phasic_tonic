@@ -1,29 +1,93 @@
-from utils import get_sequences
-
-import numpy as np
-from neurodsp.filt import filter_signal
+from .utils import *
 from scipy.signal import hilbert
+from neurodsp.filt import filter_signal
 
-def detect_phasic(rem, fs, nfilt=11, thr_dur=900):
+def detect_phasic(eeg, hypno, fs):
 
-    filt = np.ones(nfilt)/nfilt
+    rem_seq = get_sequences(np.where(hypno == 5)[0])
+    rem_idx = [(start * fs, (end+1) * fs) for start, end in rem_seq]
 
-    thr1, thr2, thr3, iti, amps = _compute_thresholds(rem, fs, smooth_filt=filt)
+    rem_idx = ensure_duration(rem_idx, min_dur=3)
+    if len(rem_idx) == 0:
+        raise ValueError("No REM epochs greater than min_dur.")
 
-    phREM = {rem_idx:[] for rem_idx in rem.keys()}
+    # get REM segments
+    rem_epochs = get_segments(rem_idx, eeg)
 
-    for rem_idx in iti:
+    # Combine the REM indices with the corresponding downsampled segments
+    rem = {seq:seg for seq, seg in zip(rem_seq, rem_epochs)}
+
+    w1 = 5.0
+    w2 = 12.0
+    nfilt = 11
+    thr_dur = 900
+
+    trdiff_list = []
+    rem_eeg = np.array([])
+    eeg_seq = {}
+    sdiff_seq = {}
+    tridx_seq = {}
+    filt = np.ones((nfilt,))
+    filt = filt / filt.sum()
+
+    for idx in rem:
+        start, end = idx
+
+        epoch = rem[idx]
+        epoch = filter_signal(epoch, fs, 'bandpass', (w1,w2), remove_edges=False)
+        epoch = hilbert(epoch)
+
+        inst_phase = np.angle(epoch)
+        inst_amp = np.abs(epoch)
+
+        # trough indices
+        tridx = _detect_troughs(inst_phase, -3)
+
+        # differences between troughs
+        trdiff = np.diff(tridx)
+
+        # smoothed trough differences
+        sdiff_seq[idx] = np.convolve(trdiff, filt, 'same')
+
+        # dict of trough differences for each REM period
+        tridx_seq[idx] = tridx
+
+        eeg_seq[idx] = inst_amp
+
+        # differences between troughs
+        trdiff_list += list(trdiff)
+
+        # amplitude of the entire REM sleep
+        rem_eeg = np.concatenate((rem_eeg, inst_amp)) 
+
+    trdiff = np.array(trdiff_list)
+    trdiff_sm = np.convolve(trdiff, filt, 'same')
+
+    # potential candidates for phasic REM:
+    # the smoothed difference between troughs is less than
+    # the 10th percentile:
+    thr1 = np.percentile(trdiff_sm, 10)
+    # the minimum smoothed difference in the candidate phREM is less than
+    # the 5th percentile
+    thr2 = np.percentile(trdiff_sm, 5)
+    # the peak amplitude is larger than the mean of the amplitude
+    # of the REM EEG.
+    thr3 = rem_eeg.mean()
+
+    phasicREM = {rem_idx:[] for rem_idx in rem.keys()}
+
+    for rem_idx in tridx_seq:
         rem_start, rem_end = rem_idx
         offset = rem_start * fs
 
         # trough indices
-        tridx = iti[rem_idx]
+        tridx = tridx_seq[rem_idx]
 
         # smoothed trough interval
-        sdiff = np.convolve
+        sdiff = sdiff_seq[rem_idx]
 
         # amplitude of the REM epoch
-        eegh = amps[rem_idx]
+        eegh = eeg_seq[rem_idx]
 
         # get the candidates for phREM
         cand_idx = np.where(sdiff <= thr1)[0]
@@ -45,70 +109,11 @@ def detect_phasic(rem, fs, nfilt=11, thr_dur=900):
             
             t_a = tridx[start] + offset
             t_b = np.min((tridx[end] + offset, rem_end * fs))
-
+            
             ph_idx = (t_a, t_b+1)
-            phREM[rem_idx].append(ph_idx)
-    
-    return phREM
+            phasicREM[rem_idx].append(ph_idx)
 
-def _compute_hilbert(sig, fs, pass_type, f_range, remove_edges=False):
-    """
-    Applies a filter and Hilbert transform.
-    Returns instantaneous amplitude and phase of the signal.
-    """
-    sig = filter_signal(sig, fs, pass_type=pass_type, f_range=f_range, remove_edges=remove_edges)
-    sig = hilbert(sig)
-    return np.abs(sig), np.angle(sig)
-
-
-def _compute_thresholds(rem, fs, smooth_filt):
-    trdiff_list = []
-    rem_eeg = []
-    eeg_seq = {}
-    sdiff_seq = {}
-    tridx_seq = {}
-
-    for idx in rem:
-        epoch = rem[idx]
-        amp, phase = _compute_hilbert(epoch, fs, pass_type="bandpass", f_range=(5, 12), remove_edges=False)
-
-        # amplitude of the entire REM sleep
-        rem_eeg += amp
-
-        # trough indices
-        tridx = _detect_troughs(phase, -3)
-
-        # differences between troughs
-        trdiff = np.diff(tridx)
-
-        # smoothed trough differences
-        sdiff_seq[idx] = np.convolve(trdiff, smooth_filt, 'same')
-
-        # dict of trough differences for each REM period
-        tridx_seq[idx] = tridx
-
-        eeg_seq[idx] = amp
-    
-        # differences between troughs
-        trdiff_list += list(trdiff)
-
-        
-    rem_eeg = np.array(rem_eeg)
-    trdiff = np.array(trdiff_list)
-    trdiff_sm = np.convolve(trdiff, smooth_filt, 'same')
-
-    # potential candidates for phasic REM:
-    # the smoothed difference between troughs is less than
-    # the 10th percentile:
-    thr1 = np.percentile(trdiff_sm, 10)
-    # the minimum smoothed difference in the candidate phREM is less than
-    # the 5th percentile
-    thr2 = np.percentile(trdiff_sm, 5)
-    # the peak amplitude is larger than the mean of the amplitude
-    # of the REM EEG.
-    thr3 = rem_eeg.mean()
-
-    return thr1, thr2, thr3, tridx_seq, eeg_seq
+    return phasicREM
 
 def _detect_troughs(signal, thr):
     lidx  = np.where(signal[0:-2] > signal[1:-1])[0]

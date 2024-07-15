@@ -4,7 +4,7 @@ README.md
 mkdocs.yml
 pyproject.toml
 tox.ini
-data/README.md
+data/dataset_loading.yaml
 docs/about.md
 docs/gen_ref_pages.py
 docs/index.md
@@ -48,8 +48,11 @@ src/phasic_tonic/__pycache__/__init__.cpython-312.pyc
 src/phasic_tonic/__pycache__/dataset_loader.cpython-310.pyc
 src/phasic_tonic/__pycache__/helper.cpython-310.pyc
 src/phasic_tonic/__pycache__/helper.cpython-311.pyc
+src/phasic_tonic/__pycache__/helper.cpython-312.pyc
 src/phasic_tonic/__pycache__/runtime_logger.cpython-310.pyc
 src/phasic_tonic/__pycache__/runtime_logger.cpython-311.pyc
+src/phasic_tonic/__pycache__/runtime_logger.cpython-312.pyc
 src/phasic_tonic/__pycache__/utils.cpython-310.pyc
 src/phasic_tonic/__pycache__/utils.cpython-311.pyc
-tests/test_ccntemplate.py
+src/phasic_tonic/__pycache__/utils.cpython-312.pyc
+tests/test_data_loading.py

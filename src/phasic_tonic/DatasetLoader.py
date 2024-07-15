@@ -8,22 +8,19 @@ from .helper import load_config
 logger = logging.getLogger("runtime")
 
 class DatasetLoader:
-    def __init__(self, dataset_args, CONFIG_DIR):
+    def __init__(self, CONFIG_DIR):
         """
         Initialize the DatasetLoader with dataset arguments and configuration directory.
 
         Args:
-            dataset_args :
-                {'dataset_name' : {'dir' : '/path/to/dataset', 'pattern_set': 'pattern_set_in_config'} 
-                Dictionary containing dataset arguments.
             CONFIG_DIR: Path to the YAML configuration file.
+            {'dataset_name' : {'path' : '/path/to/dataset', ...}
         """
-        self.patterns = load_config(CONFIG_DIR)['patterns']
-        self.dataset_args = dataset_args
+        self.config = load_config(CONFIG_DIR)
         self.combined_mapped = {}
 
-        # name_func(HPC_filename) ->    
-        cbd_wrapper = decorate_cbd(cbd_name_func=create_name_cbd, CBD_DIR=dataset_args['CBD']['dir'])
+        # name_func(HPC_filename) ->
+        cbd_wrapper = decorate_cbd(cbd_name_func=create_name_cbd, CBD_DIR=self.config['CBD']['path'])
         self.naming_functions = {"CBD": cbd_wrapper, "RGS": create_name_rgs, "OS": create_name_os}
 
     def load_datasets(self):
@@ -34,18 +31,17 @@ class DatasetLoader:
             dataset_args: Dictionary containing dataset arguments.
         Returns: 
             Combined mapping of dataset files.
-            {name : (sleep_states_fname, hpc_fname), 
-            name : (sleep_states_fname, hpc_fname), 
+            {name : (sleep_states_fname, hpc_fname, pfc_fname), 
+            name : (sleep_states_fname, hpc_fname, pfc_fname), 
             ...}
         """
-        for name, info in self.dataset_args.items():
+        for name, info in self.config.items():
             logger.debug(f"STARTED: Loading the dataset {name}.")
-            dataset_dir = info['dir']
-            pattern_set = self.patterns[info['pattern_set']]
+            dataset_dir = info['path']
             name_func = self.naming_functions[name]
 
             for root, dirs, _ in os.walk(dataset_dir):
-                mapped = process_directory(root, dirs, pattern_set, name_func)
+                mapped = process_directory(root, dirs, info, name_func)
                 self.combined_mapped.update(mapped)
 
             logger.debug(f"FINISHED: Loading the dataset {name}.")
