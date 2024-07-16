@@ -1,17 +1,17 @@
 CBD:
-  path: "/home/nero/datasets/CBD/"
+  path: "D:/Downloads/CBD"
   posttrial: "[\\w-]+posttrial[\\w-]+"
   hpc: "*HPC*continuous*"
   pfc: "*PFC*"
   states: "*-states*"
 RGS:
-  path: "/home/nero/datasets/RGS14/"
+  path: "D:/Downloads/RGS/"
   posttrial: "[\\w-]+post[\\w-]+trial[\\w-]+"
   hpc: "*HPC*continuous*"
   pfc: "*PFC*"
   states: "*-states*"
 OS:
-  path: "/home/nero/datasets/OSbasic/"
+  path: "D:/Downloads/OSBasic/"
   posttrial: ".*post_trial.*"
   hpc: "*HPC*"
   pfc: "*PFC*"

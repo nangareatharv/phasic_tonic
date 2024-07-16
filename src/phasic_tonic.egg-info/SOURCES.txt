@@ -1,3 +1,4 @@
+.gitignore
 CONTRIBUTING.md
 LICENSE
 README.md
@@ -26,6 +27,7 @@ notebooks/preprocess_percentage.ipynb
 notebooks/preprocess_power_ifreq.ipynb
 notebooks/preprocess_script.py
 notebooks/test.ipynb
+notebooks/tutorial.ipynb
 src/phasic_tonic/DatasetLoader.py
 src/phasic_tonic/__init__.py
 src/phasic_tonic/detect_phasic.py
