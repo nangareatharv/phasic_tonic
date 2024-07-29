@@ -4,6 +4,7 @@ import logging
 import pandas as pd
 from pathlib import Path
 from .helper import load_config
+import openpyxl
 
 logger = logging.getLogger("runtime")
 
